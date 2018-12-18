@@ -134,7 +134,6 @@ export default class Main extends Component {
   }
 
   render() {
-    console.log(this.state.multipleRanges);
     return (
       <main className={'Main'}>
         <h1 className={'Title'}>React-date-range</h1>
