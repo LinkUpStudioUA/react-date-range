@@ -203,7 +203,6 @@ export default class Main extends Component {
             months={2}
             showSelectionPreview={false}
             direction="horizontal"
-            infiniteRange={this.state.multipleRanges.infiniteRange}
           />
         </Section>
 

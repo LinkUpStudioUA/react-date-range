@@ -19,6 +19,7 @@ class DateRange extends Component {
       preview: null,
       isInfinite: props.isInfinite,
       infiniteRange: props.infiniteRange,
+      showDateDisplay: props.isInfinite ? false : props.showDateDisplay,
     };
     this.styles = generateStyles([coreStyles, props.classNames]);
   }
@@ -135,7 +136,8 @@ class DateRange extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
-        ranges={this.props.ranges.concat(this.state.infiniteRange)}
+        showDateDisplay={this.state.showDateDisplay}
+        infiniteRange={this.state.infiniteRange}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
         onChange={this.setSelection}

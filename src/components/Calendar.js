@@ -238,12 +238,13 @@ class Calendar extends PureComponent {
     );
   }
   renderDateDisplay() {
-    const { focusedRange, color, ranges, rangeColors } = this.props;
+    const { focusedRange, color, ranges, rangeColors, infiniteRange } = this.props;
     const defaultColor = rangeColors[focusedRange[0]] || color;
     const styles = this.styles;
+    const displayRanges = ranges.concat(infiniteRange);
     return (
       <div className={styles.dateDisplayWrapper}>
-        {ranges.map((range, i) => {
+        {displayRanges.map((range, i) => {
           if (range.showDateDisplay === false || (range.disabled && !range.showDateDisplay))
             return null;
           return (
@@ -361,7 +362,7 @@ class Calendar extends PureComponent {
     const isVertical = direction === 'vertical';
     const navigatorRenderer = this.props.navigatorRenderer || this.renderMonthAndYear;
 
-    const ranges = this.props.ranges.map((range, i) => ({
+    const ranges = this.props.ranges.concat(this.props.infiniteRange).map((range, i) => ({
       ...range,
       color: range.color || rangeColors[i] || color,
     }));
@@ -489,6 +490,7 @@ Calendar.defaultProps = {
   minDate: addYears(new Date(), -100),
   rangeColors: ['#3d91ff', '#3ecf8e', '#fed14c'],
   dragSelectionEnabled: true,
+  infiniteRange: [],
 };
 
 Calendar.propTypes = {
@@ -506,6 +508,7 @@ Calendar.propTypes = {
   shownDate: PropTypes.object,
   onShownDateChange: PropTypes.func,
   ranges: PropTypes.arrayOf(rangeShape),
+  infiniteRange: PropTypes.arrayOf(rangeShape),
   preview: PropTypes.shape({
     startDate: PropTypes.object,
     endDate: PropTypes.object,
