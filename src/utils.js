@@ -6,6 +6,7 @@ import {
   endOfMonth,
   startOfWeek,
   endOfWeek,
+  addDays,
 } from 'date-fns';
 
 export function calcFocusDate(currentFocusedDate, props) {
@@ -71,7 +72,7 @@ export function concatRanges(ranges) {
   const newRanges = [];
   let curRange = ranges[0];
   for (let i = 1; i < ranges.length; i++) {
-    if (curRange.endDate >= ranges[i].startDate) {
+    if (addDays(curRange.endDate, 1) >= ranges[i].startDate) {
       if (curRange.endDate < ranges[i].endDate) curRange.endDate = ranges[i].endDate;
     } else {
       newRanges.push(curRange);

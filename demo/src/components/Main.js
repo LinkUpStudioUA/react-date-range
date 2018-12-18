@@ -100,21 +100,9 @@ export default class Main extends Component {
       },
       multipleRanges: {
         selection1: {
-          startDate: addDays(new Date(), 1),
-          endDate: null,
+          startDate: new Date(),
+          endDate: new Date(),
           key: 'selection1',
-        },
-        selection2: {
-          startDate: addDays(new Date(), 4),
-          endDate: addDays(new Date(), 8),
-          key: 'selection2',
-        },
-        selection3: {
-          startDate: addDays(new Date(), 8),
-          endDate: addDays(new Date(), 10),
-          key: 'selection3',
-          showDateDisplay: false,
-          autoFocus: false,
         },
         infiniteRange: [],
       },
@@ -205,57 +193,16 @@ export default class Main extends Component {
         </Section>
 
         <Section title="DateRangePicker - Multiple Range">
-          <div>
-            <label className={'label'}>Selection1 Start:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection1.startDate, '-')}
-            />
-            <label className={'label'}>Selection1 End:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection1.endDate, 'Continuous')}
-            />
-            <div className={'newLine'} />
-
-            <label className={'label'}>Selection2 Start:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection2.startDate, '-')}
-            />
-            <label className={'label'}>Selection2 End:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection2.endDate, 'Continuous')}
-            />
-            <div className={'newLine'} />
-
-            <label className={'label'}>Selection3 Start:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection3.startDate, '-')}
-            />
-            <label className={'label'}>Selection3 End:</label>
-            <input
-              type="text"
-              readOnly
-              value={formatDateDisplay(this.state.multipleRanges.selection3.endDate, 'Continuous')}
-            />
-          </div>
+          <div />
           <DateRangePicker
             onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
-            ranges={[
-              this.state.multipleRanges.selection1,
-              this.state.multipleRanges.selection2,
-              this.state.multipleRanges.selection3,
-            ]}
+            ranges={[this.state.multipleRanges.selection1]}
             className={'PreviewArea'}
             isInfinite={true}
+            moveRangeOnFirstSelection={false}
+            months={2}
+            showSelectionPreview={false}
+            direction="horizontal"
             infiniteRange={this.state.multipleRanges.infiniteRange}
           />
         </Section>

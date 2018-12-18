@@ -90,6 +90,7 @@ class DateRange extends Component {
       infiniteRange.push({
         startDate: new Date(newSelection.range.startDate),
         endDate: new Date(newSelection.range.endDate),
+        color: this.props.rangeColors[0],
       });
       infiniteRange = concatRanges(infiniteRange);
       newSelection.nextFocusRange = [0, 0];
@@ -106,6 +107,7 @@ class DateRange extends Component {
     this.setState({
       focusedRange: newSelection.nextFocusRange,
       preview: null,
+      infiniteRange,
     });
     onRangeFocusChange && onRangeFocusChange(newSelection.nextFocusRange);
   }
@@ -133,6 +135,7 @@ class DateRange extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
+        ranges={this.props.ranges.concat(this.state.infiniteRange)}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
         onChange={this.setSelection}
