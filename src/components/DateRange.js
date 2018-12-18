@@ -18,7 +18,7 @@ class DateRange extends Component {
       focusedRange: props.initialFocusedRange || [findNextRangeIndex(props.ranges), 0],
       preview: null,
       isInfinite: props.isInfinite,
-      infiniteRange: props.infiniteRange,
+      infiniteRange: props.isInfinite ? props.infiniteRange : [],
       showDateDisplay: props.isInfinite ? false : props.showDateDisplay,
     };
     this.styles = generateStyles([coreStyles, props.classNames]);
