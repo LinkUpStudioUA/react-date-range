@@ -93,7 +93,7 @@ class DateRange extends Component {
         endDate: new Date(newSelection.range.endDate),
         color: this.props.rangeColors[0],
       });
-      infiniteRange = concatRanges(infiniteRange);
+      infiniteRange = concatRanges(infiniteRange, this.props.mergeRanges);
       newSelection.nextFocusRange = [0, 0];
     }
     onChange(
@@ -158,6 +158,7 @@ DateRange.defaultProps = {
   disabledDates: [],
   isInfinite: false,
   infiniteRange: [],
+  mergeRanges: false,
 };
 
 DateRange.propTypes = {
@@ -169,6 +170,7 @@ DateRange.propTypes = {
   moveRangeOnFirstSelection: PropTypes.bool,
   isInfinite: PropTypes.bool,
   infiniteRange: PropTypes.array,
+  mergeRanges: PropTypes.bool,
 };
 
 export default DateRange;
