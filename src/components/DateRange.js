@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Calendar from './Calendar.js';
 import { rangeShape } from './DayCell';
-import { findNextRangeIndex, generateStyles } from '../utils.js';
+import { findNextRangeIndex, generateStyles, concatRanges } from '../utils.js';
 import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max } from 'date-fns';
 import classnames from 'classnames';
 import coreStyles from '../styles';
@@ -17,6 +17,8 @@ class DateRange extends Component {
     this.state = {
       focusedRange: props.initialFocusedRange || [findNextRangeIndex(props.ranges), 0],
       preview: null,
+      isInfinite: props.isInfinite,
+      infiniteRange: props.infiniteRange,
     };
     this.styles = generateStyles([coreStyles, props.classNames]);
   }
@@ -77,18 +79,30 @@ class DateRange extends Component {
     };
   }
   setSelection(value, isSingleValue) {
-    const { onChange, ranges, onRangeFocusChange } = this.props;
+    const { onChange, ranges, onRangeFocusChange, isInfinite } = this.props;
     const focusedRange = this.props.focusedRange || this.state.focusedRange;
     const focusedRangeIndex = focusedRange[0];
     const selectedRange = ranges[focusedRangeIndex];
     if (!selectedRange) return;
     const newSelection = this.calcNewSelection(value, isSingleValue);
-    onChange({
-      [selectedRange.key || `range${focusedRangeIndex + 1}`]: {
-        ...selectedRange,
-        ...newSelection.range,
+    let infiniteRange = this.props.infiniteRange;
+    if (isInfinite && focusedRange[1] == 1) {
+      infiniteRange.push({
+        startDate: new Date(newSelection.range.startDate),
+        endDate: new Date(newSelection.range.endDate),
+      });
+      infiniteRange = concatRanges(infiniteRange);
+      newSelection.nextFocusRange = [0, 0];
+    }
+    onChange(
+      {
+        [selectedRange.key || `range${focusedRangeIndex + 1}`]: {
+          ...selectedRange,
+          ...newSelection.range,
+        },
       },
-    });
+      infiniteRange
+    );
     this.setState({
       focusedRange: newSelection.nextFocusRange,
       preview: null,
@@ -137,6 +151,8 @@ DateRange.defaultProps = {
   moveRangeOnFirstSelection: false,
   rangeColors: ['#3d91ff', '#3ecf8e', '#fed14c'],
   disabledDates: [],
+  isInfinite: false,
+  infiniteRange: [],
 };
 
 DateRange.propTypes = {
@@ -146,6 +162,8 @@ DateRange.propTypes = {
   className: PropTypes.string,
   ranges: PropTypes.arrayOf(rangeShape),
   moveRangeOnFirstSelection: PropTypes.bool,
+  isInfinite: PropTypes.bool,
+  infiniteRange: PropTypes.array,
 };
 
 export default DateRange;

@@ -116,6 +116,7 @@ export default class Main extends Component {
           showDateDisplay: false,
           autoFocus: false,
         },
+        infiniteRange: [],
       },
       datePickerInternational: null,
       locale: 'ja',
@@ -130,22 +131,22 @@ export default class Main extends Component {
   }
 
   handleChange(which, payload) {
-    console.log(which, payload);
     this.setState({
       [which]: payload,
     });
   }
-  handleRangeChange(which, payload) {
-    console.log(which, payload);
+  handleRangeChange(which, payload, infiniteRange) {
     this.setState({
       [which]: {
         ...this.state[which],
         ...payload,
+        infiniteRange,
       },
     });
   }
 
   render() {
+    console.log(this.state.multipleRanges);
     return (
       <main className={'Main'}>
         <h1 className={'Title'}>React-date-range</h1>
@@ -254,6 +255,8 @@ export default class Main extends Component {
               this.state.multipleRanges.selection3,
             ]}
             className={'PreviewArea'}
+            isInfinite={true}
+            infiniteRange={this.state.multipleRanges.infiniteRange}
           />
         </Section>
 

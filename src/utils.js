@@ -65,6 +65,23 @@ export function getMonthDisplayRange(date, dateOptions) {
   };
 }
 
+export function concatRanges(ranges) {
+  if (ranges.length <= 1) return ranges;
+  ranges = ranges.sort((a, b) => a.startDate - b.startDate || a.endDate - b.endDate);
+  const newRanges = [];
+  let curRange = ranges[0];
+  for (let i = 1; i < ranges.length; i++) {
+    if (curRange.endDate >= ranges[i].startDate) {
+      if (curRange.endDate < ranges[i].endDate) curRange.endDate = ranges[i].endDate;
+    } else {
+      newRanges.push(curRange);
+      curRange = ranges[i];
+    }
+  }
+  newRanges.push(curRange);
+  return newRanges;
+}
+
 export function generateStyles(sources) {
   if (!sources.length) return {};
   const generatedStyles = sources
