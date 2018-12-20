@@ -22,15 +22,16 @@
   ],
   "contributors": [
     "Burak Can <neoberg@gmail.com> (https://github.com/burakcan)",
-    "Mehmet Kamil Morcay <mehmetmorcay@gmail.com> (https://github.com/mkg0)"
+    "Mehmet Kamil Morcay <mehmetmorcay@gmail.com> (https://github.com/mkg0)",
+    "Rostyslav Toch <RokaRostuk@gmail.com> (https://github.com/RokaUA)"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Adphorus/react-date-range"
+    "url": "http://github.com/LinkUpStudioUA/react-date-range"
   },
   "bugs": {
-    "url": "http://github.com/Adphorus/react-date-range/issues"
+    "url": "http://github.com/LinkUpStudioUA/react-date-range/issues"
   },
   "dependencies": {
     "classnames": "^2.2.1",
