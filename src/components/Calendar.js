@@ -296,6 +296,19 @@ class Calendar extends PureComponent {
     }
   }
 
+  // removeRange(date, ranges) {
+  //   console.log("ranges:", ranges);
+  //   console.log("date:", date);
+  //   ranges.filter(range => {
+  //     let curRange = range.startDate.getTime() <= date.getTime() && range.endDate.getTime() >= date.getTime();
+  //     return curRange;
+  //   })
+  //   console.log(ranges.filter(range => {
+  //     let curRange = range.startDate.getTime() <= date.getTime() && range.endDate.getTime() >= date.getTime();
+  //     return curRange;
+  //   }));
+  // }
+
   onDragSelectionEnd(date) {
     const { updateRange, displayMode, onChange, dragSelectionEnabled } = this.props;
 
@@ -413,6 +426,7 @@ class Calendar extends PureComponent {
                       dateOptions={this.dateOptions}
                       disabledDates={disabledDates}
                       month={monthStep}
+                      removeRange={this.props.removeRange}
                       onDragSelectionStart={this.onDragSelectionStart}
                       onDragSelectionEnd={this.onDragSelectionEnd}
                       onDragSelectionMove={this.onDragSelectionMove}
@@ -450,6 +464,7 @@ class Calendar extends PureComponent {
                   dateOptions={this.dateOptions}
                   disabledDates={disabledDates}
                   month={monthStep}
+                  removeRange={this.props.removeRange}
                   onDragSelectionStart={this.onDragSelectionStart}
                   onDragSelectionEnd={this.onDragSelectionEnd}
                   onDragSelectionMove={this.onDragSelectionMove}
@@ -501,6 +516,7 @@ Calendar.propTypes = {
   maxDate: PropTypes.object,
   date: PropTypes.object,
   onChange: PropTypes.func,
+  removeRange: PropTypes.func,
   onPreviewChange: PropTypes.func,
   onRangeFocusChange: PropTypes.func,
   classNames: PropTypes.object,

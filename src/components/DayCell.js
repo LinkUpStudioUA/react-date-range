@@ -23,7 +23,7 @@ class DayCell extends Component {
     const { day } = this.props;
     switch (event.keyCode) {
       case 13: //space
-      case 32: //enter
+      case 32: //enter 
         if (event.type === 'keydown') {
           this.props.onMouseDown(day);
         } else {
@@ -40,6 +40,8 @@ class DayCell extends Component {
       return;
     }
 
+
+    // console.log({...event})
     switch (event.type) {
       case 'mouseenter':
         this.props.onMouseEnter(day);
@@ -51,8 +53,12 @@ class DayCell extends Component {
         stateChanges.hover = false;
         break;
       case 'mousedown':
-        stateChanges.active = true;
-        this.props.onMouseDown(day);
+        if (event.nativeEvent.which == 3) {
+          this.props.removeRange(day);
+        } else {
+          stateChanges.active = true;
+          this.props.onMouseDown(day);
+        }
         break;
       case 'mouseup':
         event.stopPropagation();
@@ -220,6 +226,7 @@ DayCell.propTypes = {
   color: PropTypes.string,
   displayMode: PropTypes.oneOf(['dateRange', 'date']),
   styles: PropTypes.object,
+  removeRange: PropTypes.func,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   onMouseEnter: PropTypes.func,

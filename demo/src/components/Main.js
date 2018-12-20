@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Calendar, DateRange, DateRangePicker, DefinedRange } from '../../../src';
 import * as rdrLocales from '../../../src/locale';
-import { format, addDays } from 'date-fns';
+import { format, addDays, getTime } from 'date-fns';
 import Section from './Section';
 
 const nameMapper = {
@@ -132,6 +132,32 @@ export default class Main extends Component {
       },
     });
   }
+  handleRangeRemove(which, payload) {
+    console.log('handleRangeRemove')
+    console.log('which', which)
+    console.log('payload', getTime(payload))
+    let ranges = this.state[which].infiniteRange;
+    console.log('ranges', ranges)
+
+    let filteredRanges = ranges.filter(range => {
+      return !(getTime(range.startDate) <= getTime(payload) &&
+      getTime(range.endDate) >= getTime(payload));
+    })
+
+    console.log('filteredRanges', filteredRanges)
+    
+    this.setState({
+      [which]: {
+        ...this.state[which],
+        infiniteRange: [...filteredRanges],
+      },
+    });
+    console.log('state', this.state[which])
+  }
+
+  componentDidUpdate() {
+    console.log('state', this.state)
+  }
 
   render() {
     return (
@@ -198,6 +224,7 @@ export default class Main extends Component {
             ranges={[this.state.multipleRanges.selection1]}
             className={'PreviewArea'}
             isInfinite={true}
+            removeRange={this.handleRangeRemove.bind(this, 'multipleRanges')}
             moveRangeOnFirstSelection={false}
             months={2}
             showSelectionPreview={false}

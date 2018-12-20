@@ -92,6 +92,7 @@ class Month extends PureComponent {
                     })
                   }
                   styles={styles}
+                  removeRange={this.props.removeRange}
                   onMouseDown={this.props.onDragSelectionStart}
                   onMouseUp={this.props.onDragSelectionEnd}
                   onMouseEnter={this.props.onDragSelectionMove}
@@ -126,6 +127,7 @@ Month.propTypes = {
   maxDate: PropTypes.object,
   ranges: PropTypes.arrayOf(rangeShape),
   focusedRange: PropTypes.arrayOf(PropTypes.number),
+  removeRange: PropTypes.func,
   onDragSelectionStart: PropTypes.func,
   onDragSelectionEnd: PropTypes.func,
   onDragSelectionMove: PropTypes.func,

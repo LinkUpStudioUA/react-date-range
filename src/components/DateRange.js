@@ -126,6 +126,7 @@ class DateRange extends Component {
     const color = ranges[focusedRange[0]].color || rangeColors[focusedRange[0]] || color;
     this.setState({ preview: { ...val.range, color } });
   }
+
   render() {
     return (
       <Calendar
@@ -136,10 +137,12 @@ class DateRange extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
+        ranges={this.hasRemoved ? this.props.ranges : this.filteredRanges}
         showDateDisplay={this.state.showDateDisplay}
         infiniteRange={this.state.infiniteRange}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
+        removeRange={this.props.removeRange}
         onChange={this.setSelection}
         updateRange={val => this.setSelection(val, false)}
         ref={target => {
@@ -164,6 +167,7 @@ DateRange.defaultProps = {
 DateRange.propTypes = {
   ...Calendar.propTypes,
   onChange: PropTypes.func,
+  removeRange: PropTypes.func,
   onRangeFocusChange: PropTypes.func,
   className: PropTypes.string,
   ranges: PropTypes.arrayOf(rangeShape),
