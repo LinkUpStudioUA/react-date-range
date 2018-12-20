@@ -2,13 +2,13 @@
   "name": "react-date-range",
   "version": "1.0.0-beta",
   "description": "A React component for choosing dates and date ranges.",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "NODE_ENV=development & webpack-dev-server --hot --inline",
     "clear": "rm -rf dist/* & rm -rf demo/dist/*",
     "build": "NODE_ENV=production & yarn build-library & yarn build-demo",
     "build-demo": "webpack -p",
-    "build-library": "babel ./src --out-dir ./dist --ignore test.js & postcss 'src/styles.scss' -d dist --ext css & postcss 'src/theme/*.scss' -d 'dist/theme' --ext css",
+    "build-library": "babel ./src --out-dir ./lib --ignore test.js & postcss 'src/styles.scss' -d lib --ext css & postcss 'src/theme/*.scss' -d 'lib/theme' --ext css",
     "lint": "eslint 'src/**/*.js'",
     "test": "jest",
     "preversion": "yarn clear & yarn build"
