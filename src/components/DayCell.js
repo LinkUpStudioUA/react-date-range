@@ -54,6 +54,7 @@ class DayCell extends Component {
         break;
       case 'mousedown':
         if (event.nativeEvent.which == 3) {
+          event.preventDefault();
           this.props.removeRange(day);
         } else {
           stateChanges.active = true;

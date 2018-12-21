@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Calendar from './Calendar.js';
 import { rangeShape } from './DayCell';
 import { findNextRangeIndex, generateStyles, concatRanges } from '../utils.js';
-import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max } from 'date-fns';
+import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max, getTime } from 'date-fns';
 import classnames from 'classnames';
 import coreStyles from '../styles';
 
@@ -11,6 +11,7 @@ class DateRange extends Component {
   constructor(props, context) {
     super(props, context);
     this.setSelection = this.setSelection.bind(this);
+    this.destroyRange = this.destroyRange.bind(this);
     this.handleRangeFocusChange = this.handleRangeFocusChange.bind(this);
     this.updatePreview = this.updatePreview.bind(this);
     this.calcNewSelection = this.calcNewSelection.bind(this);
@@ -127,6 +128,18 @@ class DateRange extends Component {
     this.setState({ preview: { ...val.range, color } });
   }
 
+  destroyRange(date) {
+    const { removeRange } = this.props;
+    let infiniteRange = this.props.infiniteRange
+    let filteredRanges = infiniteRange.filter((range) => {
+      return !(getTime(range.startDate) <= getTime(date)
+            && getTime(range.endDate) >= getTime(date));
+    })
+    infiniteRange = concatRanges(filteredRanges, this.props.mergeRanges);
+    this.setState({infiniteRange});
+    removeRange(infiniteRange);
+  }
+
   render() {
     return (
       <Calendar
@@ -137,13 +150,13 @@ class DateRange extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
-        ranges={this.hasRemoved ? this.props.ranges : this.filteredRanges}
+        ranges={this.props.ranges}
         showDateDisplay={this.state.showDateDisplay}
         infiniteRange={this.state.infiniteRange}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
-        removeRange={this.props.removeRange}
         onChange={this.setSelection}
+        removeRange={this.destroyRange}
         updateRange={val => this.setSelection(val, false)}
         ref={target => {
           this.calendar = target;

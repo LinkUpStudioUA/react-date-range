@@ -135,24 +135,8 @@ export default class Main extends Component {
   handleRangeRemove(which, payload) {
     console.log('handleRangeRemove')
     console.log('which', which)
-    console.log('payload', getTime(payload))
-    let ranges = this.state[which].infiniteRange;
-    console.log('ranges', ranges)
-
-    let filteredRanges = ranges.filter(range => {
-      return !(getTime(range.startDate) <= getTime(payload) &&
-      getTime(range.endDate) >= getTime(payload));
-    })
-
-    console.log('filteredRanges', filteredRanges)
+    console.log('payload', payload)
     
-    this.setState({
-      [which]: {
-        ...this.state[which],
-        infiniteRange: [...filteredRanges],
-      },
-    });
-    console.log('state', this.state[which])
   }
 
   componentDidUpdate() {
