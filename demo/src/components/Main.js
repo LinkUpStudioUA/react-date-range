@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Calendar, DateRange, DateRangePicker, DefinedRange } from '../../../src';
+import { Calendar, DateRange, DateRangePicker, DefinedRange, MultiplePicker } from '../../../src';
 import * as rdrLocales from '../../../src/locale';
 import { format, addDays, getTime } from 'date-fns';
 import Section from './Section';
@@ -132,11 +132,16 @@ export default class Main extends Component {
       },
     });
   }
-  handleRangeRemove(which, payload) {
+  handleRangeRemove(which, infiniteRange) {
     console.log('handleRangeRemove')
     console.log('which', which)
-    console.log('payload', payload)
-    
+    console.log('payload', infiniteRange)
+    this.setState({
+      [which]: {
+        ...this.state[which],
+        infiniteRange,
+      },
+    });
   }
 
   componentDidUpdate() {
@@ -203,7 +208,7 @@ export default class Main extends Component {
 
         <Section title="DateRangePicker - Multiple Range">
           <div />
-          <DateRangePicker
+          <MultiplePicker
             onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
             ranges={[this.state.multipleRanges.selection1]}
             className={'PreviewArea'}

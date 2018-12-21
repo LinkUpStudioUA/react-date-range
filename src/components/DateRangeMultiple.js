@@ -7,7 +7,7 @@ import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max
 import classnames from 'classnames';
 import coreStyles from '../styles';
 
-class DateRange extends Component {
+class DateRangeMultiple extends Component {
   constructor(props, context) {
     super(props, context);
     this.setSelection = this.setSelection.bind(this);
@@ -175,7 +175,7 @@ class DateRange extends Component {
   }
 }
 
-DateRange.defaultProps = {
+DateRangeMultiple.defaultProps = {
   classNames: {},
   ranges: [],
   moveRangeOnFirstSelection: false,
@@ -186,7 +186,7 @@ DateRange.defaultProps = {
   mergeRanges: false,
 };
 
-DateRange.propTypes = {
+DateRangeMultiple.propTypes = {
   ...Calendar.propTypes,
   onChange: PropTypes.func,
   removeRange: PropTypes.func,
@@ -199,4 +199,4 @@ DateRange.propTypes = {
   mergeRanges: PropTypes.bool,
 };
 
-export default DateRange;
+export default DateRangeMultiple;

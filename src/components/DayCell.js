@@ -40,8 +40,6 @@ class DayCell extends Component {
       return;
     }
 
-
-    // console.log({...event})
     switch (event.type) {
       case 'mouseenter':
         this.props.onMouseEnter(day);
@@ -64,12 +62,28 @@ class DayCell extends Component {
       case 'mouseup':
         event.stopPropagation();
         stateChanges.active = false;
-        this.props.onMouseUp(day);
+        if (event.nativeEvent.which == 3) {
+          event.preventDefault();
+        } else {
+          this.props.onMouseUp(day);
+        }
         break;
       case 'focus':
-        onPreviewChange(day);
+        if (event.nativeEvent.which == 3) {
+          event.preventDefault();
+          this.props.removeRange(day);
+        } else {
+          onPreviewChange(day);
+        }
         break;
     }
+
+    if (event.type == "contextmenu") {
+      event.preventDefault();
+      console.error({...event})
+      return false;
+    }
+
     if (Object.keys(stateChanges).length) {
       this.setState(stateChanges);
     }
