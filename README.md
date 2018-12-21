@@ -25,14 +25,14 @@ A date library agnostic React component for choosing dates and date ranges. Uses
 
 ## Getting Started
 ### Installation
-
+<!-- 
 ```
 yarn add react-date-range@next
 ```
 
-If you don't use yarn
+If you don't use yarn -->
 ```
-$ npm install --save react-date-range@next
+$ npm install --save https://github.com/LinkUpStudioUA/react-date-range.git
 ```
 
 ## Usage
@@ -40,8 +40,8 @@ $ npm install --save react-date-range@next
 You need to import skeleton and theme styles first.
 
 ```javascript
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
+import 'react-date-range/lib/styles.css'; // main style file
+import 'react-date-range/lib/theme/default.css'; // theme css file
 ```
 
 ### `DatePicker`

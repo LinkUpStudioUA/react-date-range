@@ -91,7 +91,7 @@ class DateRange extends Component {
       infiniteRange.push({
         startDate: new Date(newSelection.range.startDate),
         endDate: new Date(newSelection.range.endDate),
-        color: this.props.rangeColors[0],
+        color: ranges[focusedRange[0]].color || this.props.rangeColors[focusedRange[0]] || color,
       });
       infiniteRange = concatRanges(infiniteRange, this.props.mergeRanges);
       newSelection.nextFocusRange = [0, 0];
