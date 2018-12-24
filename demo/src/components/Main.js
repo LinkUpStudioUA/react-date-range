@@ -206,13 +206,15 @@ export default class Main extends Component {
           </div>
         </Section>
 
-        <Section title="DateRangePicker - Multiple Range">
+        <Section title="MultiplePicker - Multiple Range">
           <div />
+          {/* this.state.multipleRanges.selection1 */}
           <MultiplePicker
             onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
-            ranges={[this.state.multipleRanges.selection1]}
+            ranges={[]}
             className={'PreviewArea'}
             isInfinite={true}
+            color="#86147d"
             removeRange={this.handleRangeRemove.bind(this, 'multipleRanges')}
             moveRangeOnFirstSelection={false}
             months={2}

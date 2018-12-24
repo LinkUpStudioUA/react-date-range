@@ -19,22 +19,22 @@ class DateRangeMultiple extends Component {
       focusedRange: props.initialFocusedRange || [findNextRangeIndex(props.ranges), 0],
       preview: null,
       isInfinite: props.isInfinite,
-      infiniteRange: props.isInfinite ? props.infiniteRange.length ? props.infiniteRange : [...props.ranges] : [],
-      showDateDisplay: props.isInfinite ? false : props.showDateDisplay,
+      infiniteRange: [...props.ranges]
     };
     console.log("this.state", this.state)
     this.styles = generateStyles([coreStyles, props.classNames]);
   }
   calcNewSelection(value, isSingleValue = true) {
     const focusedRange = this.props.focusedRange || this.state.focusedRange;
-    const { isInfinite, onChange, maxDate, moveRangeOnFirstSelection, disabledDates } = this.props;
-    const focusedRangeIndex = focusedRange[0];
-    const ranges = isInfinite ? this.state.infiniteRange : this.props.ranges;
-    const selectedRange = ranges[focusedRangeIndex];
+    const { onChange, maxDate, moveRangeOnFirstSelection, disabledDates } = this.props;
+    // const focusedRangeIndex = focusedRange[0];
+    const ranges = this.state.infiniteRange;
+    const selectedRange = ranges[ranges.length - 1]
+    console.log("selectedRange", selectedRange);
     if (!selectedRange || !onChange) return {};
 
-    console.warn("this.state.infiniteRange", this.state.infiniteRange)
-    console.warn("ranges", ranges)
+    // console.warn("this.state.infiniteRange", this.state.infiniteRange)
+    // console.warn("ranges", ranges)
     
     let { startDate, endDate } = selectedRange;
     if (!endDate) endDate = new Date(startDate);
@@ -47,6 +47,9 @@ class DateRangeMultiple extends Component {
       const dayOffset = differenceInCalendarDays(endDate, startDate);
       startDate = value;
       endDate = moveRangeOnFirstSelection ? addDays(value, dayOffset) : value;
+      console.log("startDate", startDate)
+      console.log("dayOffset", dayOffset)
+      console.log("endDate", endDate)
       if (maxDate) endDate = min([endDate, maxDate]);
       nextFocusRange = [focusedRange[0], 1];
     } else {
@@ -76,10 +79,10 @@ class DateRangeMultiple extends Component {
     }
 
     if (!nextFocusRange) {
-      const nextFocusRangeIndex = findNextRangeIndex(this.props.ranges, focusedRange[0]);
+      const nextFocusRangeIndex = findNextRangeIndex(ranges, focusedRange[0]);
       nextFocusRange = [nextFocusRangeIndex, 0];
     }
-    console.error("startDate", startDate)
+    console.warn(startDate, endDate)
     return {
       wasValid: !(inValidDatesWithinRange.length > 0),
       range: { startDate, endDate },
@@ -87,39 +90,23 @@ class DateRangeMultiple extends Component {
     };
   }
   setSelection(value, isSingleValue) {
-    const { onChange, onRangeFocusChange, isInfinite } = this.props;
-    const ranges = isInfinite ? this.state.infiniteRange : this.props.ranges;
+    const { onChange, onRangeFocusChange } = this.props;
+    const ranges = this.state.infiniteRange;
     const focusedRange = this.props.focusedRange || this.state.focusedRange;
-    const focusedRangeIndex = focusedRange[0];
-    const selectedRange = ranges[focusedRangeIndex];
-    if (!selectedRange) return;
     const newSelection = this.calcNewSelection(value, isSingleValue);
-    console.log("newSelection", newSelection.range)
-    let infiniteRange = this.state.infiniteRange;
-    if (isInfinite && focusedRange[1] == 1) {
-      infiniteRange.push({
-        startDate: new Date(newSelection.range.startDate),
-        endDate: new Date(newSelection.range.endDate),
-        color: ranges[focusedRange[0]].color || this.props.rangeColors[focusedRange[0]] || color,
-      });
-      infiniteRange = concatRanges(infiniteRange, this.props.mergeRanges);
-      newSelection.nextFocusRange = [0, 0];
+    if (focusedRange[1] === 0) {
+      ranges.push({...newSelection.range});
+    } else if (focusedRange[1] === 1) {
+      ranges[ranges.length - 1].endDate = newSelection.range.endDate;
     }
-    onChange(
-      {
-        [selectedRange.key || `range${focusedRangeIndex + 1}`]: {
-          ...selectedRange,
-          ...newSelection.range,
-        },
-      },
-      infiniteRange
-    );
+
     this.setState({
       focusedRange: newSelection.nextFocusRange,
       preview: null,
-      infiniteRange
+      infiniteRange: [...this.state.infiniteRange, newSelection.range]
     });
-    console.log("onRangeFocusChange", onRangeFocusChange)
+    onChange(this.state.infiniteRange);
+    // newSelection.nextFocusRange = [0, 0];
     onRangeFocusChange && onRangeFocusChange(newSelection.nextFocusRange);
   }
   handleRangeFocusChange(focusedRange) {
@@ -131,9 +118,10 @@ class DateRangeMultiple extends Component {
       this.setState({ preview: null });
       return;
     }
-    const { rangeColors, ranges } = this.props;
-    const focusedRange = this.props.focusedRange || this.state.focusedRange;
-    const color = ranges[focusedRange[0]].color || rangeColors[focusedRange[0]] || color;
+    const { color } = this.props;
+    // const ranges = this.state.infiniteRange;
+    // const focusedRange = this.props.focusedRange || this.state.focusedRange;
+    // const previewColor = ranges[focusedRange[0]].color || color || rangeColors[focusedRange[0]];
     this.setState({ preview: { ...val.range, color } });
   }
 
@@ -159,13 +147,14 @@ class DateRangeMultiple extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
-        ranges={this.props.isInfinite ? this.state.infiniteRange :this.props.ranges}
-        showDateDisplay={this.state.showDateDisplay}
+        ranges={this.state.infiniteRange}
+        showDateDisplay={false}
         infiniteRange={this.state.infiniteRange}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
         onChange={this.setSelection}
         removeRange={this.destroyRange}
+        isInfinite={true}
         updateRange={val => this.setSelection(val, false)}
         ref={target => {
           this.calendar = target;
@@ -180,6 +169,7 @@ DateRangeMultiple.defaultProps = {
   ranges: [],
   moveRangeOnFirstSelection: false,
   rangeColors: ['#3d91ff', '#3ecf8e', '#fed14c'],
+  color: "#3d91ff",
   disabledDates: [],
   isInfinite: false,
   infiniteRange: [],

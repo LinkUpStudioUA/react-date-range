@@ -370,15 +370,16 @@ class Calendar extends PureComponent {
       minDate,
       rangeColors,
       color,
+      ranges
     } = this.props;
     const { scrollArea, focusedDate } = this.state;
     const isVertical = direction === 'vertical';
     const navigatorRenderer = this.props.navigatorRenderer || this.renderMonthAndYear;
 
-    const ranges = this.props.ranges.concat(this.props.infiniteRange).map((range, i) => ({
-      ...range,
-      color: range.color || rangeColors[i] || color,
-    }));
+    // const ranges = this.props.ranges.concat(this.props.infiniteRange).map((range, i) => ({
+    //   ...range,
+    //   color: range.color || color || rangeColors[i],
+    // }));
     return (
       <div
         className={classnames(this.styles.calendarWrapper, this.props.className)}
