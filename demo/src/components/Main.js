@@ -211,7 +211,7 @@ export default class Main extends Component {
           {/* this.state.multipleRanges.selection1 */}
           <MultiplePicker
             onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
-            ranges={[]}
+            ranges={[this.state.multipleRanges.selection1]}
             className={'PreviewArea'}
             isInfinite={true}
             color="#86147d"
