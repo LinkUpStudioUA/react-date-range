@@ -138,7 +138,7 @@ class DateRangeMultiple extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.ranges != this.props.ranges) {
-      infiniteRange = concatRanges(this.props.ranges, this.props.mergeRanges);
+      let infiniteRange = concatRanges(this.props.ranges, this.props.mergeRanges);
       this.setState({infiniteRange});
       // this.setState({
       //   infiniteRange: [...this.props.ranges]
