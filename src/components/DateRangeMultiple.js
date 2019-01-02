@@ -21,7 +21,8 @@ class DateRangeMultiple extends Component {
       isInfinite: props.isInfinite,
       infiniteRange: [...props.ranges]
     };
-    console.log("this.state", this.state)
+    // console.log("RANGES", ...props.ranges)
+    // console.log("this.state", this.state)
     this.styles = generateStyles([coreStyles, props.classNames]);
   }
   calcNewSelection(value, isSingleValue = true) {
@@ -30,7 +31,7 @@ class DateRangeMultiple extends Component {
     // const focusedRangeIndex = focusedRange[0];
     const ranges = this.state.infiniteRange;
     const selectedRange = ranges[ranges.length - 1]
-    console.log("selectedRange", selectedRange);
+    // console.log("selectedRange", selectedRange);
     if (!selectedRange || !onChange) return {};
 
     // console.warn("this.state.infiniteRange", this.state.infiniteRange)
@@ -47,9 +48,9 @@ class DateRangeMultiple extends Component {
       const dayOffset = differenceInCalendarDays(endDate, startDate);
       startDate = value;
       endDate = moveRangeOnFirstSelection ? addDays(value, dayOffset) : value;
-      console.log("startDate", startDate)
-      console.log("dayOffset", dayOffset)
-      console.log("endDate", endDate)
+      // console.log("startDate", startDate)
+      // console.log("dayOffset", dayOffset)
+      // console.log("endDate", endDate)
       if (maxDate) endDate = min([endDate, maxDate]);
       nextFocusRange = [focusedRange[0], 1];
     } else {
@@ -82,7 +83,7 @@ class DateRangeMultiple extends Component {
       const nextFocusRangeIndex = findNextRangeIndex(ranges, focusedRange[0]);
       nextFocusRange = [nextFocusRangeIndex, 0];
     }
-    console.warn(startDate, endDate)
+    // console.warn(startDate, endDate)
     return {
       wasValid: !(inValidDatesWithinRange.length > 0),
       range: { startDate, endDate },
@@ -135,6 +136,16 @@ class DateRangeMultiple extends Component {
     infiniteRange = concatRanges(filteredRanges, this.props.mergeRanges);
     removeRange(infiniteRange);
     this.setState({infiniteRange});
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.ranges != this.props.ranges) {
+      infiniteRange = concatRanges(this.props.ranges, this.props.mergeRanges);
+      this.setState({infiniteRange});
+      // this.setState({
+      //   infiniteRange: [...this.props.ranges]
+      // })
+    }
   }
 
   render() {

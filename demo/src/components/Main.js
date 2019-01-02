@@ -98,25 +98,36 @@ export default class Main extends Component {
           key: 'compare',
         },
       },
-      multipleRanges: {
-        selection1: {
+      dateRangePicker: [
+        {
+          startDate: new Date(),
+          endDate: addDays(new Date(), 7),
+          key: 'selection',
+        }
+      ],
+      multipleRanges: [
+        {
           startDate: new Date(),
           endDate: new Date(),
           key: 'selection1',
         },
-        infiniteRange: [],
-      },
+        {
+          startDate: addDays(new Date(), 4),
+          endDate: addDays(new Date(), 9),
+          key: 'selection1',
+        },
+      ],
       datePickerInternational: null,
       locale: 'ja',
-      dateRangePicker: {
-        selection: {
-          startDate: new Date(),
-          endDate: addDays(new Date(), 7),
-          key: 'selection',
-        },
-      },
     };
   }
+          // dateRangePicker: {
+          //   selection: {
+          //     startDate: new Date(),
+          //     endDate: addDays(new Date(), 7),
+          //     key: 'selection',
+          //   },
+          // },
 
   handleChange(which, payload) {
     this.setState({
@@ -143,6 +154,21 @@ export default class Main extends Component {
       },
     });
   }
+  addRange(which) {
+    console.log({
+      startDate: addDays(new Date(), 15),
+      endDate: addDays(new Date(), 30)
+    });
+    this.setState({
+      [which]: [
+        ...this.state[which],
+        {
+          startDate: addDays(new Date(), 15),
+          endDate: addDays(new Date(), 30)
+        }
+      ]
+    });
+  }
 
   componentDidUpdate() {
     console.log('state', this.state)
@@ -155,7 +181,7 @@ export default class Main extends Component {
 
         <Section title="DateRangePicker - 2 month">
           <div>
-            <input
+            {/* <input
               type="text"
               readOnly
               value={formatDateDisplay(this.state.dateRangePicker.selection.startDate)}
@@ -164,7 +190,8 @@ export default class Main extends Component {
               type="text"
               readOnly
               value={formatDateDisplay(this.state.dateRangePicker.selection.endDate)}
-            />
+            /> */}
+              <button type="button" onClick={this.addRange.bind(this, 'dateRangePicker')}>Add Range</button>
           </div>
           <div>
             <DateRangePicker
@@ -173,7 +200,7 @@ export default class Main extends Component {
               moveRangeOnFirstSelection={false}
               className={'PreviewArea'}
               months={2}
-              ranges={[this.state.dateRangePicker.selection]}
+              ranges={[...this.state.dateRangePicker]}
               direction="horizontal"
             />
           </div>
@@ -207,20 +234,22 @@ export default class Main extends Component {
         </Section>
 
         <Section title="MultiplePicker - Multiple Range">
-          <div />
           {/* this.state.multipleRanges.selection1 */}
-          <MultiplePicker
-            onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
-            ranges={[]}
-            className={'PreviewArea'}
-            isInfinite={true}
-            color="#86147d"
-            removeRange={this.handleRangeRemove.bind(this, 'multipleRanges')}
-            moveRangeOnFirstSelection={false}
-            months={2}
-            showSelectionPreview={false}
-            direction="horizontal"
-          />
+            <div>
+              <button type="button" onClick={this.addRange.bind(this, 'multipleRanges')}>Add Range</button>
+            </div>
+            <MultiplePicker
+              onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
+              ranges={[...this.state.multipleRanges]}
+              className={'PreviewArea'}
+              isInfinite={true}
+              color="#86147d"
+              removeRange={this.handleRangeRemove.bind(this, 'multipleRanges')}
+              moveRangeOnFirstSelection={false}
+              months={2}
+              showSelectionPreview={false}
+              direction="horizontal"
+            />
         </Section>
 
         <Section title="DatePicker - Internationalization">
