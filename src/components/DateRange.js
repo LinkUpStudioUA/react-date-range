@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Calendar from './Calendar.js';
 import { rangeShape } from './DayCell';
 import { findNextRangeIndex, generateStyles, concatRanges } from '../utils.js';
-import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max, getTime } from 'date-fns';
+import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max } from 'date-fns';
 import classnames from 'classnames';
 import coreStyles from '../styles';
 
@@ -11,7 +11,6 @@ class DateRange extends Component {
   constructor(props, context) {
     super(props, context);
     this.setSelection = this.setSelection.bind(this);
-    this.destroyRange = this.destroyRange.bind(this);
     this.handleRangeFocusChange = this.handleRangeFocusChange.bind(this);
     this.updatePreview = this.updatePreview.bind(this);
     this.calcNewSelection = this.calcNewSelection.bind(this);
@@ -19,23 +18,18 @@ class DateRange extends Component {
       focusedRange: props.initialFocusedRange || [findNextRangeIndex(props.ranges), 0],
       preview: null,
       isInfinite: props.isInfinite,
-      infiniteRange: props.isInfinite ? props.infiniteRange.length ? props.infiniteRange : [...props.ranges] : [],
+      infiniteRange: props.isInfinite ? props.infiniteRange : [],
       showDateDisplay: props.isInfinite ? false : props.showDateDisplay,
     };
-    console.log("this.state", this.state)
     this.styles = generateStyles([coreStyles, props.classNames]);
   }
   calcNewSelection(value, isSingleValue = true) {
     const focusedRange = this.props.focusedRange || this.state.focusedRange;
-    const { isInfinite, onChange, maxDate, moveRangeOnFirstSelection, disabledDates } = this.props;
+    const { ranges, onChange, maxDate, moveRangeOnFirstSelection, disabledDates } = this.props;
     const focusedRangeIndex = focusedRange[0];
-    const ranges = isInfinite ? this.state.infiniteRange : this.props.ranges;
     const selectedRange = ranges[focusedRangeIndex];
     if (!selectedRange || !onChange) return {};
 
-    console.warn("this.state.infiniteRange", this.state.infiniteRange)
-    console.warn("ranges", ranges)
-    
     let { startDate, endDate } = selectedRange;
     if (!endDate) endDate = new Date(startDate);
     let nextFocusRange;
@@ -79,7 +73,6 @@ class DateRange extends Component {
       const nextFocusRangeIndex = findNextRangeIndex(this.props.ranges, focusedRange[0]);
       nextFocusRange = [nextFocusRangeIndex, 0];
     }
-    console.error("startDate", startDate)
     return {
       wasValid: !(inValidDatesWithinRange.length > 0),
       range: { startDate, endDate },
@@ -87,20 +80,18 @@ class DateRange extends Component {
     };
   }
   setSelection(value, isSingleValue) {
-    const { onChange, onRangeFocusChange, isInfinite } = this.props;
-    const ranges = isInfinite ? this.state.infiniteRange : this.props.ranges;
+    const { onChange, ranges, onRangeFocusChange, isInfinite } = this.props;
     const focusedRange = this.props.focusedRange || this.state.focusedRange;
     const focusedRangeIndex = focusedRange[0];
     const selectedRange = ranges[focusedRangeIndex];
     if (!selectedRange) return;
     const newSelection = this.calcNewSelection(value, isSingleValue);
-    console.log("newSelection", newSelection.range)
-    let infiniteRange = this.state.infiniteRange;
+    let infiniteRange = this.props.infiniteRange;
     if (isInfinite && focusedRange[1] == 1) {
       infiniteRange.push({
         startDate: new Date(newSelection.range.startDate),
         endDate: new Date(newSelection.range.endDate),
-        color: ranges[focusedRange[0]].color || this.props.rangeColors[focusedRange[0]] || color,
+        color: this.props.rangeColors[0],
       });
       infiniteRange = concatRanges(infiniteRange, this.props.mergeRanges);
       newSelection.nextFocusRange = [0, 0];
@@ -117,9 +108,8 @@ class DateRange extends Component {
     this.setState({
       focusedRange: newSelection.nextFocusRange,
       preview: null,
-      infiniteRange
+      infiniteRange,
     });
-    console.log("onRangeFocusChange", onRangeFocusChange)
     onRangeFocusChange && onRangeFocusChange(newSelection.nextFocusRange);
   }
   handleRangeFocusChange(focusedRange) {
@@ -136,19 +126,6 @@ class DateRange extends Component {
     const color = ranges[focusedRange[0]].color || rangeColors[focusedRange[0]] || color;
     this.setState({ preview: { ...val.range, color } });
   }
-
-  destroyRange(date) {
-    const { removeRange } = this.props;
-    let infiniteRange = this.props.infiniteRange
-    let filteredRanges = infiniteRange.filter((range) => {
-      return !(getTime(range.startDate) <= getTime(date)
-            && getTime(range.endDate) >= getTime(date));
-    })
-    infiniteRange = concatRanges(filteredRanges, this.props.mergeRanges);
-    removeRange(infiniteRange);
-    this.setState({infiniteRange});
-  }
-
   render() {
     return (
       <Calendar
@@ -159,13 +136,11 @@ class DateRange extends Component {
           this.updatePreview(value ? this.calcNewSelection(value) : null);
         }}
         {...this.props}
-        ranges={this.props.isInfinite ? this.state.infiniteRange :this.props.ranges}
         showDateDisplay={this.state.showDateDisplay}
         infiniteRange={this.state.infiniteRange}
         displayMode="dateRange"
         className={classnames(this.styles.dateRangeWrapper, this.props.className)}
         onChange={this.setSelection}
-        removeRange={this.destroyRange}
         updateRange={val => this.setSelection(val, false)}
         ref={target => {
           this.calendar = target;
@@ -189,7 +164,6 @@ DateRange.defaultProps = {
 DateRange.propTypes = {
   ...Calendar.propTypes,
   onChange: PropTypes.func,
-  removeRange: PropTypes.func,
   onRangeFocusChange: PropTypes.func,
   className: PropTypes.string,
   ranges: PropTypes.arrayOf(rangeShape),
