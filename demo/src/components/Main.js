@@ -134,26 +134,23 @@ export default class Main extends Component {
       [which]: payload,
     });
   }
-  handleRangeChange(which, payload, infiniteRange) {
+  handleRangeChange(which, payload) {
     this.setState({
       [which]: {
         ...this.state[which],
         ...payload,
-        infiniteRange,
       },
     });
   }
-  handleRangeRemove(which, infiniteRange) {
-    console.log('handleRangeRemove')
-    console.log('which', which)
-    console.log('payload', infiniteRange)
+
+  handleMultipleRangeChange(which, payload) {
     this.setState({
-      [which]: {
-        ...this.state[which],
-        infiniteRange,
-      },
+      [which]: [
+        ...payload,
+      ],
     });
   }
+
   addRange(which) {
     console.log({
       startDate: addDays(new Date(), 15),
@@ -239,12 +236,11 @@ export default class Main extends Component {
               <button type="button" onClick={this.addRange.bind(this, 'multipleRanges')}>Add Range</button>
             </div>
             <MultiplePicker
-              onChange={this.handleRangeChange.bind(this, 'multipleRanges')}
+              onChange={this.handleMultipleRangeChange.bind(this, 'multipleRanges')}
               ranges={[...this.state.multipleRanges]}
               className={'PreviewArea'}
               isInfinite={true}
               color="#86147d"
-              removeRange={this.handleRangeRemove.bind(this, 'multipleRanges')}
               moveRangeOnFirstSelection={false}
               months={2}
               showSelectionPreview={false}

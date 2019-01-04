@@ -96,13 +96,13 @@ class DateRangeMultiple extends Component {
       ranges[ranges.length - 1].endDate = newSelection.range.endDate;
       infRange = concatRanges(ranges, this.props.mergeRanges);
       
-          this.setState({
-            focusedRange: newSelection.nextFocusRange,
-            preview: null,
-            infiniteRange: [...infRange]
-          });
-          // infiniteRange: [...this.state.infiniteRange, newSelection.range]
-          onChange(this.state.infiniteRange);
+      this.setState({
+        focusedRange: newSelection.nextFocusRange,
+        preview: null,
+        infiniteRange: [...infRange]
+      });
+
+      onChange(infRange);
     }
     // newSelection.nextFocusRange = [0, 0];
     onRangeFocusChange && onRangeFocusChange(newSelection.nextFocusRange);
