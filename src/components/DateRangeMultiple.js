@@ -93,7 +93,7 @@ class DateRangeMultiple extends Component {
     if (focusedRange[1] === 0) {
       ranges.push({...newSelection.range});
     } else if (focusedRange[1] === 1) {
-      ranges[ranges.length - 1].endDate = newSelection.range.endDate;
+      ranges[ranges.length - 1] = newSelection.range;
       infRange = concatRanges(ranges, this.props.mergeRanges);
       
       this.setState({
