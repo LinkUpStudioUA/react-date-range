@@ -133,7 +133,7 @@ class DateRangeMultiple extends Component {
     // removeRange(infiniteRange);
     // console.log("filteredRanges:", filteredRanges);
     this.setState({infiniteRange: [...filteredRanges] });
-    onChange(this.state.infiniteRange);
+    onChange(filteredRanges);
   }
 
   componentDidUpdate(prevProps) {
