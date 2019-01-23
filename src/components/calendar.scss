@@ -45,14 +45,16 @@
 
 .rdrMonthPicker{
   width: 120px;
+  > div > div:hover {
+    border-color: #888!important;
+  }
 }
 
 .rdrYearPicker{
   width: 85px;
-}
-
-.css-x2gazl:hover {
-  border-color: #888!important;
+  > div > div:hover {
+    border-color: #888!important;
+  }
 }
 
 .rdrNextPrevButton {
