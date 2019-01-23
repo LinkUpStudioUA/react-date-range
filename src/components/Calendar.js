@@ -5,6 +5,7 @@ import Month from './Month.js';
 import { calcFocusDate, generateStyles, getMonthDisplayRange } from '../utils';
 import classnames from 'classnames';
 import ReactList from 'react-list';
+import Select from 'react-select';
 import {
   addMonths,
   format,
@@ -19,6 +20,8 @@ import {
   startOfMonth,
   endOfMonth,
   addDays,
+  getMonth,
+  getYear,
   isSameMonth,
   differenceInDays,
   min,
@@ -26,7 +29,6 @@ import {
 } from 'date-fns';
 import defaultLocale from 'date-fns/locale/en-US';
 import coreStyles from '../styles';
-
 class Calendar extends PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -42,9 +44,39 @@ class Calendar extends PureComponent {
     this.updatePreview = this.updatePreview.bind(this);
     this.estimateMonthSize = this.estimateMonthSize.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleChangeMonth = this.handleChangeMonth.bind(this);
+    this.handleChangeYear = this.handleChangeYear.bind(this);
+    this.hexToRGB = this.hexToRGB.bind(this);
     this.dateOptions = { locale: props.locale };
     this.styles = generateStyles([coreStyles, props.classNames]);
     this.listSizeCache = {};
+    this.customStyles = {
+      option: (provided, state) => {
+        let color = this.hexToRGB(props.color)
+        return {
+        ...provided,
+        backgroundColor: state.isSelected ? props.color : state.isFocused ? `rgba(${color.r},${color.g},${color.b}, 0.3)` : 'white',
+        color: state.isSelected ? "white" : 'black',
+        textAlign: 'left',
+        cursor: 'pointer',
+        fontWeight: 400
+        // padding: 20,
+      }},
+      control: (provided, state) => {
+        console.log(state)
+        return {
+        ...provided,
+        minHeight: 30,
+        fontWeight: 400,
+        borderColor: state.isFocused ? '#888' : '#ccc',
+        boxShadow: "none"
+      }},
+      indicatorSeparator: () => ({}),
+      dropdownIndicator: (provided) => ({
+        ...provided,
+        padding: 5
+      }),
+    }
     this.state = {
       focusedDate: calcFocusDate(null, props),
       drag: {
@@ -54,7 +86,70 @@ class Calendar extends PureComponent {
       },
       scrollArea: this.calcScrollArea(props),
     };
+
+    console.log(getMonth(calcFocusDate(null, props)));
+
+    this.monthOptions = [];
+    this.yearOptions = [];
+    this.selectedMonth = {};
+    let currentYear = getYear(calcFocusDate(null, props));
+    this.selectedYear = {
+      value: currentYear,
+      label: currentYear
+    }
+    const upperYearLimit = (props.maxDate || Calendar.defaultProps.maxDate).getFullYear();
+    const lowerYearLimit = (props.minDate || Calendar.defaultProps.minDate).getFullYear();
+    props.locale.localize.months().map((month, i) => {
+      let currentMonth = getMonth(calcFocusDate(null, props));
+      if (currentMonth == i) {
+        this.selectedMonth = {
+          value: i,
+          label: month
+        }
+      }
+      this.monthOptions.push({
+        value: i,
+        label: month
+      })
+    })
+    new Array(upperYearLimit - lowerYearLimit + 1)
+      .fill(upperYearLimit)
+      .map((val, i) => {
+        const year = val - i;
+        this.yearOptions.push({
+          value: year,
+          label: year
+        })
+    })
   }
+
+  hexToRGB(hex) {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    let result = null;
+    if (hex) {
+      hex = hex.replace(shorthandRegex, (m, r, g, b) => {
+        return r + r + g + g + b + b;
+      });
+
+      result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    }
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+    } : null;
+  }
+  
+  handleChangeMonth(selectedOption) {
+    this.selectedMonth = selectedOption;
+    this.changeShownDate(selectedOption.value, 'setMonth')
+  }
+  
+  handleChangeYear(selectedOption) {
+    this.selectedYear = selectedOption;
+    this.changeShownDate(selectedOption.value, 'setYear')
+  }
+
   calcScrollArea(props) {
     const { direction, months, scroll } = props;
     if (!scroll.enabled) return { enabled: false };
@@ -133,6 +228,7 @@ class Calendar extends PureComponent {
     }
   }
   changeShownDate(value, mode = 'set') {
+    console.log("changeShownDate", value);
     const { focusedDate } = this.state;
     const { onShownDateChange, minDate, maxDate } = this.props;
     const modeMapper = {
@@ -162,8 +258,6 @@ class Calendar extends PureComponent {
   }
   renderMonthAndYear(focusedDate, changeShownDate, props) {
     const { showMonthArrow, locale, minDate, maxDate, showMonthAndYearPickers } = props;
-    const upperYearLimit = (maxDate || Calendar.defaultProps.maxDate).getFullYear();
-    const lowerYearLimit = (minDate || Calendar.defaultProps.minDate).getFullYear();
     const styles = this.styles;
     return (
       <div onMouseUp={e => e.stopPropagation()} className={styles.monthAndYearWrapper}>
@@ -178,7 +272,7 @@ class Calendar extends PureComponent {
         {showMonthAndYearPickers ? (
           <span className={styles.monthAndYearPickers}>
             <span className={styles.monthPicker}>
-              <select
+              {/* <select
                 value={focusedDate.getMonth()}
                 onChange={e => changeShownDate(e.target.value, 'setMonth')}>
                 {locale.localize.months().map((month, i) => (
@@ -186,11 +280,17 @@ class Calendar extends PureComponent {
                     {month}
                   </option>
                 ))}
-              </select>
+              </select> */}
+              <Select
+                styles={this.customStyles}
+                value={this.selectedMonth }
+                onChange={this.handleChangeMonth}
+                options={this.monthOptions}
+              />
             </span>
             <span className={styles.monthAndYearDivider} />
             <span className={styles.yearPicker}>
-              <select
+              {/* <select
                 value={focusedDate.getFullYear()}
                 onChange={e => changeShownDate(e.target.value, 'setYear')}>
                 {new Array(upperYearLimit - lowerYearLimit + 1)
@@ -203,7 +303,14 @@ class Calendar extends PureComponent {
                       </option>
                     );
                   })}
-              </select>
+              </select> */}
+
+              <Select
+                styles={this.customStyles}
+                value={this.selectedYear}
+                onChange={this.handleChangeYear}
+                options={this.yearOptions}
+              />
             </span>
           </span>
         ) : (
@@ -295,19 +402,6 @@ class Calendar extends PureComponent {
       onChange && onChange(date);
     }
   }
-
-  // removeRange(date, ranges) {
-  //   console.log("ranges:", ranges);
-  //   console.log("date:", date);
-  //   ranges.filter(range => {
-  //     let curRange = range.startDate.getTime() <= date.getTime() && range.endDate.getTime() >= date.getTime();
-  //     return curRange;
-  //   })
-  //   console.log(ranges.filter(range => {
-  //     let curRange = range.startDate.getTime() <= date.getTime() && range.endDate.getTime() >= date.getTime();
-  //     return curRange;
-  //   }));
-  // }
 
   onDragSelectionEnd(date) {
     const { updateRange, displayMode, onChange, dragSelectionEnabled } = this.props;

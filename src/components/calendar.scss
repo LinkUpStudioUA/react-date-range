@@ -40,11 +40,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 300;
 }
 
-.rdrMonthPicker{}
+.rdrMonthPicker{
+  width: 120px;
+}
 
-.rdrYearPicker{}
+.rdrYearPicker{
+  width: 85px;
+}
+
+.css-x2gazl:hover {
+  border-color: #888!important;
+}
 
 .rdrNextPrevButton {
   box-sizing: inherit;
