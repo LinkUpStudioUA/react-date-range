@@ -60,17 +60,14 @@ class Calendar extends PureComponent {
         textAlign: 'left',
         cursor: 'pointer',
         fontWeight: 400
-        // padding: 20,
       }},
-      control: (provided, state) => {
-        console.log(state)
-        return {
+      control: (provided, state) => ({
         ...provided,
         minHeight: 30,
         fontWeight: 400,
         borderColor: state.isFocused ? '#888' : '#ccc',
         boxShadow: "none"
-      }},
+      }),
       indicatorSeparator: () => ({}),
       dropdownIndicator: (provided) => ({
         ...provided,
@@ -86,8 +83,6 @@ class Calendar extends PureComponent {
       },
       scrollArea: this.calcScrollArea(props),
     };
-
-    console.log(getMonth(calcFocusDate(null, props)));
 
     this.monthOptions = [];
     this.yearOptions = [];
