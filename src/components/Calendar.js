@@ -67,8 +67,10 @@ class Calendar extends PureComponent {
       }),
       control: (provided, state) => ({
         ...provided,
+        height: 30,
         minHeight: 30,
         fontWeight: 400,
+        backgroundColor: "none",
         borderColor: state.isFocused ? '#888' : '#ccc',
         boxShadow: "none"
       }),
