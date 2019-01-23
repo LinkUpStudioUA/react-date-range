@@ -61,6 +61,10 @@ class Calendar extends PureComponent {
         cursor: 'pointer',
         fontWeight: 400
       }},
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: 'white'
+      }),
       control: (provided, state) => ({
         ...provided,
         minHeight: 30,
