@@ -114,13 +114,13 @@ class Calendar extends PureComponent {
       })
     })
     new Array(upperYearLimit - lowerYearLimit + 1)
-      .fill(upperYearLimit)
-      .map((val, i) => {
-        const year = val - i;
-        this.yearOptions.push({
-          value: year,
-          label: year
-        })
+    .fill(upperYearLimit)
+    .map((val, i) => {
+      const year = val - i;
+      this.yearOptions.unshift({
+        value: year,
+        label: year
+      })
     })
   }
 

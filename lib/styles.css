@@ -71,20 +71,24 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  font-weight: 300;
 }
 
-.rdrMonthPicker {
+.rdrMonthPicker{
   width: 120px;
 }
 
-.rdrYearPicker {
+.rdrMonthPicker > div > div:hover {
+    border-color: #888!important;
+  }
+
+.rdrYearPicker{
   width: 85px;
 }
 
-.rdrMonthPicker > div > div:hover,
 .rdrYearPicker > div > div:hover {
-  border-color: #888!important;
-}
+    border-color: #888!important;
+  }
 
 .rdrNextPrevButton {
   -webkit-box-sizing: inherit;
