@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Calendar from './Calendar.js';
 import { rangeShape } from './DayCell';
 import { findNextRangeIndex, generateStyles, concatRanges } from '../utils.js';
-import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max, getTime } from 'date-fns';
+import { isBefore, differenceInCalendarDays, addDays, min, isWithinInterval, max, getTime, isAfter } from 'date-fns';
 import classnames from 'classnames';
 import coreStyles from '../styles';
 
@@ -126,14 +126,17 @@ class DateRangeMultiple extends Component {
   destroyRange(date) {
     const { onChange } = this.props;
     let infiniteRange = this.state.infiniteRange
+    let removedRange = {}
     let filteredRanges = infiniteRange.filter((range) => {
-      return !(getTime(range.startDate) <= getTime(date)
-            && getTime(range.endDate) >= getTime(date));
+      if (isBefore(range.startDate, date)
+          && isAfter(range.endDate, date)) {
+        removedRange = range;
+      }
+      return !(isBefore(range.startDate, date) && isAfter(range.endDate, date));
     })
-    // removeRange(infiniteRange);
-    // console.log("filteredRanges:", filteredRanges);
+
     this.setState({infiniteRange: [...filteredRanges] });
-    onChange(filteredRanges);
+    onChange(filteredRanges, removedRange);
   }
 
   componentDidUpdate(prevProps) {
