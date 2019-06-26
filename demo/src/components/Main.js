@@ -121,13 +121,13 @@ export default class Main extends Component {
       locale: 'ja',
     };
   }
-          // dateRangePicker: {
-          //   selection: {
-          //     startDate: new Date(),
-          //     endDate: addDays(new Date(), 7),
-          //     key: 'selection',
-          //   },
-          // },
+  // dateRangePicker: {
+  //   selection: {
+  //     startDate: new Date(),
+  //     endDate: addDays(new Date(), 7),
+  //     key: 'selection',
+  //   },
+  // },
 
   handleChange(which, payload) {
     this.setState({
@@ -151,10 +151,26 @@ export default class Main extends Component {
     });
   }
 
+  onShownDateChange(which, date) {
+    console.log({
+      startDate: addDays(date, 15),
+      endDate: addDays(date, 30)
+    });
+    this.setState({
+      [which]: [
+        ...this.state[which],
+        {
+          startDate: addDays(date, 15),
+          endDate: addDays(date, 30)
+        }
+      ]
+    });
+  }
+
   addRange(which) {
     console.log({
-      startDate: addDays(new Date(), 15),
-      endDate: addDays(new Date(), 30)
+      startDate: addDays(new Date(), 115),
+      endDate: addDays(new Date(), 130)
     });
     this.setState({
       [which]: [
@@ -188,7 +204,7 @@ export default class Main extends Component {
               readOnly
               value={formatDateDisplay(this.state.dateRangePicker.selection.endDate)}
             /> */}
-              <button type="button" onClick={this.addRange.bind(this, 'dateRangePicker')}>Add Range</button>
+            <button type="button" onClick={this.addRange.bind(this, 'dateRangePicker')}>Add Range</button>
           </div>
           <div>
             <DateRangePicker
@@ -232,20 +248,21 @@ export default class Main extends Component {
 
         <Section title="MultiplePicker - Multiple Range">
           {/* this.state.multipleRanges.selection1 */}
-            <div>
-              <button type="button" onClick={this.addRange.bind(this, 'multipleRanges')}>Add Range</button>
-            </div>
-            <MultiplePicker
-              onChange={this.handleMultipleRangeChange.bind(this, 'multipleRanges')}
-              ranges={[...this.state.multipleRanges]}
-              className={'PreviewArea'}
-              isInfinite={true}
-              color="#86147d"
-              moveRangeOnFirstSelection={false}
-              months={2}
-              showSelectionPreview={false}
-              direction="horizontal"
-            />
+          <div>
+            <button type="button" onClick={this.addRange.bind(this, 'multipleRanges')}>Add Range</button>
+          </div>
+          <MultiplePicker
+            onChange={this.handleMultipleRangeChange.bind(this, 'multipleRanges')}
+            ranges={[...this.state.multipleRanges]}
+            onShownDateChange={this.onShownDateChange.bind(this, 'multipleRanges')}
+            className={'PreviewArea'}
+            isInfinite={true}
+            color="#86147d"
+            moveRangeOnFirstSelection={false}
+            months={2}
+            showSelectionPreview={false}
+            direction="horizontal"
+          />
         </Section>
 
         <Section title="DatePicker - Internationalization">

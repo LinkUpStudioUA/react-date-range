@@ -29,12 +29,11 @@ class DateRangeMultiple extends Component {
     // const focusedRangeIndex = focusedRange[0];
     const ranges = this.state.infiniteRange;
     const selectedRange = ranges[ranges.length - 1]
-    // console.log("selectedRange", selectedRange);
     if (!selectedRange || !onChange) return {};
 
     // console.warn("this.state.infiniteRange", this.state.infiniteRange)
     // console.warn("ranges", ranges)
-    
+
     let { startDate, endDate } = selectedRange;
     if (!endDate) endDate = new Date(startDate);
     let nextFocusRange;
@@ -91,11 +90,11 @@ class DateRangeMultiple extends Component {
     const newSelection = this.calcNewSelection(value, isSingleValue);
     let infRange;
     if (focusedRange[1] === 0) {
-      ranges.push({...newSelection.range});
+      ranges.push({ ...newSelection.range });
     } else if (focusedRange[1] === 1) {
       ranges[ranges.length - 1] = newSelection.range;
       infRange = concatRanges(ranges, this.props.mergeRanges);
-      
+
       this.setState({
         focusedRange: newSelection.nextFocusRange,
         preview: null,
@@ -129,20 +128,23 @@ class DateRangeMultiple extends Component {
     let removedRange = {}
     let filteredRanges = infiniteRange.filter((range) => {
       if (isBefore(range.startDate, date)
-          && isAfter(range.endDate, date)) {
+        && isAfter(range.endDate, date)) {
         removedRange = range;
       }
       return !(isBefore(range.startDate, date) && isAfter(range.endDate, date));
     })
+    if (!filteredRanges.length) {
+      filteredRanges.push({ startDate: new Date(), endDate: new Date() })
+    }
 
-    this.setState({infiniteRange: [...filteredRanges] });
+    this.setState({ infiniteRange: [...filteredRanges] });
     onChange(filteredRanges, removedRange);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.ranges != this.props.ranges) {
       let infiniteRange = concatRanges(this.props.ranges, this.props.mergeRanges);
-      this.setState({infiniteRange});
+      this.setState({ infiniteRange });
       // this.setState({
       //   infiniteRange: [...this.props.ranges]
       // })

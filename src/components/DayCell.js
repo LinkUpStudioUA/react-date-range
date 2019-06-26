@@ -5,13 +5,18 @@ import classnames from 'classnames';
 import { startOfDay, format, isSameDay, isAfter, isBefore, endOfDay } from 'date-fns';
 
 class DayCell extends Component {
+  timer;
+  touchduration;
   constructor(props, context) {
     super(props, context);
 
+    this.touchduration = 500;
     this.state = {
       hover: false,
       active: false,
     };
+    this.touchstart = this.touchstart.bind(this);
+    this.touchend = this.touchend.bind(this);
     this.getClassNames = this.getClassNames.bind(this);
     this.handleMouseEvent = this.handleMouseEvent.bind(this);
     this.handleKeyEvent = this.handleKeyEvent.bind(this);
@@ -32,6 +37,17 @@ class DayCell extends Component {
         break;
     }
   }
+  touchstart(event) {
+    console.log('touchstart')
+    event.preventDefault();
+    this.timer = setTimeout(() => {console.log('removeRange'); this.props.removeRange(this.props.day)}, this.touchduration); 
+  }
+  touchend() {
+    console.log('touchend')
+    if (this.timer)
+      clearTimeout(this.timer);
+  }
+
   handleMouseEvent(event) {
     const { day, disabled, onPreviewChange } = this.props;
     const stateChanges = {};
@@ -53,10 +69,15 @@ class DayCell extends Component {
       case 'mousedown':
         if (event.nativeEvent.which == 3) {
           event.preventDefault();
+          event.stopPropagation();
           this.props.removeRange(day);
         } else {
           stateChanges.active = true;
           this.props.onMouseDown(day);
+          this.timer = setTimeout(() => {
+            console.log('remove')
+            this.props.removeRange(this.props.day)
+          }, this.touchduration);
         }
         break;
       case 'mouseup':
@@ -67,6 +88,7 @@ class DayCell extends Component {
         } else {
           this.props.onMouseUp(day);
         }
+        this.touchend();
         break;
       case 'focus':
         if (event.nativeEvent.which == 3) {
