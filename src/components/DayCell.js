@@ -22,6 +22,7 @@ class DayCell extends Component {
     this.handleKeyEvent = this.handleKeyEvent.bind(this);
     this.renderSelectionPlaceholders = this.renderSelectionPlaceholders.bind(this);
     this.renderPreviewPlaceholder = this.renderPreviewPlaceholder.bind(this);
+    // this.renderRemoveButton = this.renderRemoveButton.bind(this);
   }
 
   handleKeyEvent(event) {
@@ -40,7 +41,7 @@ class DayCell extends Component {
   touchstart(event) {
     console.log('touchstart')
     event.preventDefault();
-    this.timer = setTimeout(() => {console.log('removeRange'); this.props.removeRange(this.props.day)}, this.touchduration); 
+    this.timer = setTimeout(() => { console.log('removeRange'); this.props.removeRange(this.props.day) }, this.touchduration);
   }
   touchend() {
     console.log('touchend')
@@ -74,10 +75,6 @@ class DayCell extends Component {
         } else {
           stateChanges.active = true;
           this.props.onMouseDown(day);
-          this.timer = setTimeout(() => {
-            console.log('remove')
-            this.props.removeRange(this.props.day)
-          }, this.touchduration);
         }
         break;
       case 'mouseup':
@@ -94,6 +91,10 @@ class DayCell extends Component {
         if (event.nativeEvent.which == 3) {
           event.preventDefault();
           this.props.removeRange(day);
+        } else if ("ontouchstart" in document.documentElement) {
+          this.timer = setTimeout(() => {
+            this.props.removeRange(this.props.day)
+          }, this.touchduration);
         } else {
           onPreviewChange(day);
         }
@@ -102,7 +103,7 @@ class DayCell extends Component {
 
     if (event.type == "contextmenu") {
       event.preventDefault();
-      console.error({...event})
+      console.error({ ...event })
       return false;
     }
 
@@ -200,14 +201,49 @@ class DayCell extends Component {
           [styles.inRange]: range.isInRange,
         })}
         style={{ color: range.color || this.props.color }}
-      >
-      {/* {range.isEndEdge} */}
-        {
-          range.isEndEdge && <i>x</i>
-        }
-      </span>
+      ></span>
     ));
   }
+
+  // renderRemoveButton() {
+  //   const { ranges, day } = this.props;
+
+  //   const inRanges = ranges.reduce((result, range) => {
+  //     let startDate = range.startDate;
+  //     let endDate = range.endDate;
+  //     if (startDate && endDate && isBefore(endDate, startDate)) {
+  //       [startDate, endDate] = [endDate, startDate];
+  //     }
+  //     startDate = startDate ? endOfDay(startDate) : null;
+  //     endDate = endDate ? startOfDay(endDate) : null;
+  //     const isInRange =
+  //       (!startDate || isAfter(day, startDate)) && (!endDate || isBefore(day, endDate));
+  //     const isStartEdge = !isInRange && isSameDay(day, startDate);
+  //     const isEndEdge = !isInRange && isSameDay(day, endDate);
+  //     if (isInRange || isStartEdge || isEndEdge) {
+  //       return [
+  //         ...result,
+  //         {
+  //           isStartEdge,
+  //           isEndEdge: isEndEdge,
+  //           isInRange,
+  //           ...range,
+  //         },
+  //       ];
+  //     }
+  //     return result;
+  //   }, []);
+
+  //   return inRanges.map((range, i) => (
+  //     range.isEndEdge &&
+  //     ("ontouchstart" in document.documentElement) &&
+  //     <button key={`btn${i}`}
+  //       className="rdrRemoveButton"
+  //       onTouchStart={() => this.props.removeRange(this.props.day)}></button>
+
+  //   ));
+  // }
+
   render() {
     const { styles } = this.props;
     return (
