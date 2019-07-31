@@ -123,6 +123,7 @@ class DayCell extends Component {
       disabled,
       prevDayIsDisable,
       nextDayIsDisable,
+      isOutside,
       styles,
     } = this.props;
 
@@ -131,8 +132,8 @@ class DayCell extends Component {
     return classnames(styles.day, {
       [styles.dayPassive]: isPassive,
       [styles.dayDisabled]: disabled,
-      [styles.startDisabled]: disabled && !prevDayIsDisable,
-      [styles.endDisabled]: disabled && !nextDayIsDisable,
+      [styles.startDisabled]: disabled && !isOutside && !prevDayIsDisable,
+      [styles.endDisabled]: disabled && !isOutside && !nextDayIsDisable,
       [styles.dayToday]: isToday,
       [styles.dayWeekend]: isWeekend,
       [styles.dayStartOfWeek]: isStartOfWeek,

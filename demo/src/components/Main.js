@@ -351,9 +351,9 @@ export default class Main extends Component {
           <DateRange
             onChange={this.handleRangeChange.bind(this, 'dateRangeWithDisabled')}
             moveRangeOnFirstSelection={false}
-            ranges={[this.state.dateRangeWithDisabled.selection]}
+            ranges={[]}
             className={'PreviewArea'}
-            disabledDates={[new Date(), addDays(new Date(), 3)]}
+            disabledDates={[new Date(), addDays(new Date(), 3), addDays(new Date(), 4), addDays(new Date(), 5), addDays(new Date(), 6)]}
             minDate={addDays(new Date(), -3)}
           />
         </Section>

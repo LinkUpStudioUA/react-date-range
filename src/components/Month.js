@@ -92,6 +92,7 @@ class Month extends PureComponent {
                   isEndOfMonth={isEndOfMonth}
                   key={index}
                   disabled={isOutsideMinMax || isDisabledSpecifically}
+                  isOutside={isOutsideMinMax}
                   prevDayIsDisable={prevDayIsDisable}
                   nextDayIsDisable={nextDayIsDisable}
                   isPassive={
