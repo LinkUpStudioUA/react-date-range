@@ -121,12 +121,18 @@ class DayCell extends Component {
       isStartOfMonth,
       isEndOfMonth,
       disabled,
+      prevDayIsDisable,
+      nextDayIsDisable,
       styles,
     } = this.props;
+
+    console.log("DISABLEEEEEEED", prevDayIsDisable, nextDayIsDisable);
 
     return classnames(styles.day, {
       [styles.dayPassive]: isPassive,
       [styles.dayDisabled]: disabled,
+      [styles.startDisabled]: disabled && !prevDayIsDisable,
+      [styles.endDisabled]: disabled && !nextDayIsDisable,
       [styles.dayToday]: isToday,
       [styles.dayWeekend]: isWeekend,
       [styles.dayStartOfWeek]: isStartOfWeek,
@@ -294,6 +300,8 @@ DayCell.propTypes = {
   onPreviewChange: PropTypes.func,
   previewColor: PropTypes.string,
   disabled: PropTypes.bool,
+  prevDayIsDisable: PropTypes.bool,
+  nextDayIsDisable: PropTypes.bool,
   isPassive: PropTypes.bool,
   isToday: PropTypes.bool,
   isWeekend: PropTypes.bool,

@@ -53,6 +53,7 @@ class Month extends PureComponent {
       });
     }
     const showPreview = this.props.showPreview && !drag.disablePreview;
+    const days = eachDayOfInterval({ start: monthDisplay.start, end: monthDisplay.end });
     return (
       <div className={styles.month} style={this.props.style}>
         {this.props.showMonthName ? (
@@ -62,7 +63,7 @@ class Month extends PureComponent {
         ) : null}
         {this.props.showWeekDays && renderWeekdays(styles, this.props.dateOptions)}
         <div className={styles.days} onMouseLeave={this.props.onMouseLeave}>
-          {eachDayOfInterval({ start: monthDisplay.start, end: monthDisplay.end }).map(
+          {days.map(
             (day, index) => {
               const isStartOfMonth = isSameDay(day, monthDisplay.startDateOfMonth);
               const isEndOfMonth = isSameDay(day, monthDisplay.endDateOfMonth);
@@ -71,6 +72,12 @@ class Month extends PureComponent {
               const isDisabledSpecifically = disabledDates.some(disabledDate =>
                 isSameDay(disabledDate, day)
               );
+              const prevDayIsDisable = disabledDates.some(disabledDate =>
+                isSameDay(disabledDate, days[index - 1])
+              )
+              const nextDayIsDisable = disabledDates.some(disabledDate =>
+                isSameDay(disabledDate, days[index + 1])
+              )
               return (
                 <DayCell
                   {...this.props}
@@ -85,6 +92,8 @@ class Month extends PureComponent {
                   isEndOfMonth={isEndOfMonth}
                   key={index}
                   disabled={isOutsideMinMax || isDisabledSpecifically}
+                  prevDayIsDisable={prevDayIsDisable}
+                  nextDayIsDisable={nextDayIsDisable}
                   isPassive={
                     !isWithinInterval(day, {
                       start: monthDisplay.startDateOfMonth,
