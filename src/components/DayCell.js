@@ -126,9 +126,6 @@ class DayCell extends Component {
       isOutside,
       styles,
     } = this.props;
-
-    console.log("DISABLEEEEEEED", prevDayIsDisable, nextDayIsDisable);
-
     return classnames(styles.day, {
       [styles.dayPassive]: isPassive || isOutside,
       [styles.dayDisabled]: disabled,
